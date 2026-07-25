@@ -227,10 +227,10 @@ FIREBASE_PRIVATE_KEY=your_private_key
 
 ### Deploy on Vercel
 1. Push repository to GitHub.
-2. Import project into [Vercel](https://vercel.com).
+2. Import project into [Render](https://render.com/).
 3. Add all variables from `.env.local.example` under **Project Settings → Environment Variables**.
 4. Set Build Command: `npm run build`.
-5. Deploy and add live Vercel domain to **Firebase Console → Authentication → Settings → Authorized domains**.
+5. Deploy and add live Render domain to **Firebase Console → Authentication → Settings → Authorized domains**.
 
 ---
 
