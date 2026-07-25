@@ -9,7 +9,6 @@ export async function POST(request: Request) {
   try {
     const input = leadSchema.parse(await request.json());
 
-    // Use Admin SDK if credentials provided, otherwise fallback to Client SDK
     const hasAdminCreds =
       process.env.FIREBASE_PROJECT_ID &&
       process.env.FIREBASE_CLIENT_EMAIL &&
@@ -17,19 +16,41 @@ export async function POST(request: Request) {
 
     if (hasAdminCreds) {
       const now = FieldValue.serverTimestamp();
-      await adminDb().collection("leads").add({
+      const docRef = await adminDb().collection("leads").add({
         ...input,
-        status: "New",
+        status: input.status || "New",
+        priority: input.priority || "Medium",
+        source: input.source || "Website",
         createdAt: now,
         updatedAt: now,
       });
+
+      // Log Activity
+      await adminDb().collection("activity_logs").add({
+        leadId: docRef.id,
+        type: "CREATED",
+        description: `New lead created: ${input.fullName} (${input.email})`,
+        performedBy: input.email,
+        timestamp: now,
+      });
     } else {
       const now = serverTimestamp();
-      await addDoc(collection(db, "leads"), {
+      const docRef = await addDoc(collection(db, "leads"), {
         ...input,
-        status: "New",
+        status: input.status || "New",
+        priority: input.priority || "Medium",
+        source: input.source || "Website",
         createdAt: now,
         updatedAt: now,
+      });
+
+      // Log Activity to Client Firestore
+      await addDoc(collection(db, "activity_logs"), {
+        leadId: docRef.id,
+        type: "CREATED",
+        description: `New lead created: ${input.fullName} (${input.email})`,
+        performedBy: input.email,
+        timestamp: now,
       });
     }
 

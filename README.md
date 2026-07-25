@@ -1,18 +1,43 @@
-# LeadDesk Mini — Digital Heroes Training Task
+# LeadDesk Mini — Enterprise Lead Management System
 
-LeadDesk Mini is a full-stack, responsive lead capture and management platform built for the **Digital Heroes Internship Task**. It pairs a high-converting public SaaS landing page with a live, protected admin pipeline backed by Firebase Authentication and Cloud Firestore.
+**LeadDesk Mini** is an enterprise-ready, production-grade Lead Management System built for the **Digital Heroes Internship Task**. It pairs a high-converting public landing page with an advanced, real-time Lead Management CRM powered by Next.js 15, Firebase Authentication, Cloud Firestore, HTTP-only Session Cookies, Edge Middleware, Recharts analytics, and Role-Based Access Control (RBAC).
 
 ---
 
-## 🚀 Tech Stack
+## 🚀 Project Overview
+
+In any growing business, prospective clients reach out via the web saying, *"I want to build a website/product."* LeadDesk Mini provides a seamless end-to-end pipeline:
+1. **Public Lead Capture**: Converts prospect intent into qualified leads with client & server-side validation.
+2. **Secure Real-Time Storage**: Saves leads instantly to Cloud Firestore with server timestamps.
+3. **Enterprise CRM Dashboard**: Authenticated admins and managers analyze pipeline performance via Recharts, manage lead statuses (`New` → `Contacted` → `Closed` / `Lost`), search across multi-columns, assign leads, log activity trails, and export reports.
+
+---
+
+## ✨ Features
+
+- **Public Landing Page**: High-converting SaaS design with responsive hero section, features, FAQ, and footer.
+- **Dual-Layer Validation**: React Hook Form + Zod on the client; server-side Zod payload verification on `/api/leads`.
+- **Production-Level Firebase Auth & HTTP-Only Cookies**: Secure email & password sign-in backed by HTTP-only `__session` cookies and Next.js Edge Middleware server-side route protection (zero flash of protected content).
+- **Role-Based Access Control (RBAC)**: Enforces granular permissions for `Admin`, `Manager`, and `Sales` roles.
+- **Pipeline Analytics**: Interactive Recharts visualizations (Monthly Pipeline Volume Area Chart, Lead Status Donut Chart, Acquisition Channel Bar Chart).
+- **Advanced Lead Table**: Multi-column search, multi-criteria status/priority filters, column sorting, customizable pagination (5, 10, 25, 50 rows per page with page controls and record counters).
+- **Full CRUD Capabilities**: Edit lead details, priorities, follow-up dates, assignee, and internal notes with a destructive delete confirmation modal.
+- **Import & Export Tools**: Bulk CSV uploader with row validation, CSV export, JSON export, and print-ready report generation.
+- **Audit Trail & Activity Log**: Real-time system audit history tracking creations, updates, deletions, assignments, and status changes.
+- **In-App Notification Center**: Popover notification bell for lead assignments, status changes, and follow-up reminders.
+
+---
+
+## 🛠️ Tech Stack
 
 - **Framework**: Next.js 15 (App Router, React 19)
 - **Language**: TypeScript
 - **Styling**: Tailwind CSS, Framer Motion
+- **Analytics Charts**: Recharts
 - **Icons**: Lucide React
-- **Validation**: React Hook Form & Zod (Client-side & Server-side)
-- **Backend & Database**: Firebase Authentication, Cloud Firestore & Firebase Admin SDK
-- **Notifications**: Sonner
+- **Validation**: React Hook Form & Zod
+- **Backend & Database**: Firebase Authentication, Cloud Firestore, Firebase Admin SDK
+- **Notifications**: Sonner & In-App Popover
 
 ---
 
@@ -22,105 +47,147 @@ LeadDesk Mini is a full-stack, responsive lead capture and management platform b
 LeadcodeMini/
 ├── app/
 │   ├── admin/
-│   │   └── page.tsx              # Real-time protected Admin Dashboard
+│   │   └── page.tsx              # Advanced CRM Admin Dashboard (Analytics, Leads, Audit Trail, Settings)
 │   ├── api/
+│   │   ├── auth/
+│   │   │   ├── login/route.ts    # POST endpoint: Sets HTTP-only __session cookie
+│   │   │   └── logout/route.ts   # POST endpoint: Destroys __session cookie
 │   │   └── leads/
-│   │       └── route.ts          # Server-validated API endpoint (Firebase Admin)
+│   │       ├── route.ts          # POST (Create lead) endpoint with activity logging
+│   │       └── [id]/route.ts     # PUT (Update) & DELETE endpoints with validation
 │   ├── login/
 │   │   └── page.tsx              # Firebase Email/Password Sign-In page
-│   ├── globals.css               # Design system & Tailwind directives
-│   ├── layout.tsx                # Root layout with AuthProvider & Toaster
-│   └── page.tsx                  # Public landing page & CTA components
+│   ├── unauthorized/
+│   │   └── page.tsx              # 401 Unauthorized fallback page
+│   ├── layout.tsx                # Root layout wrapped in AuthProvider & Toaster
+│   └── page.tsx                  # Public landing page with lead form
 ├── components/
-│   ├── get-started-redirect.tsx  # Router-interceptor for Get Started buttons
-│   ├── lead-form.tsx             # Client-validated lead capture form
+│   ├── crm/                      # CRM Core Modules
+│   │   ├── activity-log-drawer.tsx# Audit trail timeline drawer
+│   │   ├── analytics-charts.tsx   # Recharts visualization charts
+│   │   ├── delete-confirm-modal.tsx# Destructive delete modal
+│   │   ├── edit-lead-modal.tsx    # Full lead editing modal dialog
+│   │   ├── export-tools.tsx       # CSV, JSON & Print export tools
+│   │   ├── import-csv-modal.tsx   # Bulk CSV uploader & validator
+│   │   └── notifications-popover.tsx# In-app notification center
+│   ├── lead-form.tsx             # Public validated lead form
 │   ├── navbar.tsx                # Dynamic responsive navigation bar
 │   └── ui.tsx                    # Reusable Logo and Framer Motion wrappers
 ├── lib/
-│   ├── auth-context.tsx          # React AuthContext & Firestore User Profile hook
-│   ├── firebase-admin.ts         # Server-side Firebase Admin SDK initialization
+│   ├── auth-context.tsx          # React AuthContext & RBAC permissions hook
+│   ├── firebase-admin.ts         # Server-side Firebase Admin SDK (adminDb & adminAuth)
 │   ├── firebase.ts               # Client-side Firebase App, Auth & Firestore setup
-│   ├── types.ts                  # TypeScript interfaces (Lead, UserProfile, LeadStatus)
+│   ├── types.ts                  # Extended CRM TypeScript interfaces
 │   └── validation.ts             # Zod validation schemas
-├── firestore.rules               # Production Firestore security rules
-├── eslint.config.mjs             # ESLint 9 Flat Config (Next.js & TypeScript)
+├── firestore.rules               # Security rules for leads, users, activity_logs, and notifications
+├── middleware.ts                 # Next.js Edge Middleware for server-side route security
 ├── next.config.ts                # Next.js config with Webpack module aliases
-└── package.json                  # Package dependencies & scripts
+├── render.yaml                   # Render.com deployment blueprint configuration
+├── vercel.json                   # Vercel deployment configuration
+└── package.json                  # Dependencies and build scripts
 ```
 
 ---
 
-## 🗄️ Database Model
+## 🗄️ Database Design
 
-### Collection: `leads`
+### Collection 1: `leads`
+Stores all captured and managed client lead records.
+
 | Field | Type | Description |
 | :--- | :--- | :--- |
-| `id` | `string` | Firestore document ID |
-| `fullName` | `string` | Contact person full name |
+| `id` | `string` | Auto-generated document ID |
+| `fullName` | `string` | Full name of the lead contact |
 | `email` | `string` | Valid email address |
-| `budget` | `string` | Budget selection range |
+| `phone` | `string` | Optional phone number |
+| `company` | `string` | Company or organization name |
+| `budget` | `string` | Budget selection range (e.g. `Under $5,000`, `$5,000 – $15,000`, `$50,000+`) |
 | `message` | `string` | Inbound inquiry message |
-| `status` | `string` (`"New"` \| `"Contacted"` \| `"Closed"`) | Current pipeline status |
-| `createdAt` | `Timestamp` | Server timestamp of lead creation |
-| `updatedAt` | `Timestamp` | Server timestamp of last status change |
+| `status` | `string` | Lead stage: `New` \| `Contacted` \| `Closed` \| `Lost` |
+| `priority` | `string` | Lead priority: `Low` \| `Medium` \| `High` \| `Urgent` |
+| `source` | `string` | Lead channel: `Website` \| `Referral` \| `LinkedIn` \| `Cold Call` \| `Organic` \| `Other` |
+| `assignedTo` | `string` | Email or UID of assigned sales representative |
+| `followUpDate` | `string` | Scheduled follow-up date (`YYYY-MM-DD`) |
+| `notes` | `Array<LeadNote>` | Array of internal notes (`id`, `content`, `author`, `createdAt`) |
+| `createdAt` | `Timestamp` | Firestore server timestamp of lead submission |
+| `updatedAt` | `Timestamp` | Firestore server timestamp of last update |
 
-### Collection: `users`
+#### Status Values Breakdown
+- **`New`**: Default state upon submission. Awaiting initial contact.
+- **`Contacted`**: Outreach initiated; active conversation underway.
+- **`Closed`**: Deal won or project successfully onboarded.
+- **`Lost`**: Lead disqualified or declined proposal.
+
+---
+
+### Collection 2: `users`
+Stores user profile information and access roles.
+
 | Field | Type | Description |
 | :--- | :--- | :--- |
-| `uid` | `string` | Firebase Auth User UID |
-| `email` | `string` | Registered administrator email |
-| `role` | `string` | User access role (e.g. `"Admin"`, `"Manager"`) |
-| `displayName` | `string` | User display name |
-| `createdAt` | `Timestamp` | User document creation timestamp |
+| `uid` | `string` | Firebase Auth UID |
+| `email` | `string` | User email address |
+| `role` | `string` | Access role: `Admin` \| `Manager` \| `Sales` |
+| `displayName` | `string` | User full name |
+| `createdAt` | `Timestamp` | Account creation timestamp |
 
 ---
 
-## 🔐 Authentication Flow
+### Collection 3: `activity_logs`
+Stores the complete audit trail of system events.
 
-1. **State Persistence**: The `AuthProvider` (`lib/auth-context.tsx`) subscribes to Firebase Auth via `onAuthStateChanged`.
-2. **User Profile Sync**: When a user logs in, `AuthProvider` subscribes to `users/{uid}` in Firestore to retrieve user data and role.
-3. **Route Protection**: The `/admin` dashboard checks authentication state; unauthenticated users are automatically redirected to `/login`.
-4. **Get Started Navigation**: "Get Started" buttons across the landing page navigate using Next.js `useRouter`. If logged in, users are taken directly to `/admin`; if not, they are directed to `/login`.
-
----
-
-## ⚙️ Environment Variables
-
-Create a `.env.local` file in the root directory:
-
-```env
-# Client-side Firebase Config
-NEXT_PUBLIC_FIREBASE_API_KEY=your_api_key
-NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN=your_project.firebaseapp.com
-NEXT_PUBLIC_FIREBASE_PROJECT_ID=your_project_id
-NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET=your_project.appspot.com
-NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID=your_sender_id
-NEXT_PUBLIC_FIREBASE_APP_ID=your_app_id
-
-# Server-side Firebase Admin SDK Credentials
-FIREBASE_PROJECT_ID=your_project_id
-FIREBASE_CLIENT_EMAIL=your_service_account_email
-FIREBASE_PRIVATE_KEY="-----BEGIN PRIVATE KEY-----\n...\n-----END PRIVATE KEY-----\n"
-```
+| Field | Type | Description |
+| :--- | :--- | :--- |
+| `id` | `string` | Document ID |
+| `leadId` | `string` | Associated lead ID |
+| `type` | `string` | Event type (`CREATED`, `UPDATED`, `DELETED`, `STATUS_CHANGED`, `ASSIGNED`) |
+| `description` | `string` | Detailed event log summary |
+| `performedBy` | `string` | Email of user who performed the action |
+| `timestamp` | `Timestamp` | Event timestamp |
 
 ---
 
-## 🛠️ Installation & Setup
+### Collection 4: `notifications`
+Stores in-app alerts and notifications.
 
-1. **Clone the repository**:
+| Field | Type | Description |
+| :--- | :--- | :--- |
+| `id` | `string` | Document ID |
+| `title` | `string` | Notification title |
+| `message` | `string` | Notification message body |
+| `type` | `string` | Notification type (`ASSIGNMENT`, `STATUS`, `FOLLOWUP`, `NEW_LEAD`) |
+| `read` | `boolean` | Read status |
+| `targetUserEmail` | `string` | Recipient user email |
+| `createdAt` | `Timestamp` | Timestamp |
+
+---
+
+## 🔐 Authentication & Security Flow
+
+1. **Sign-In**: The client authenticates via Firebase Auth `signInWithEmailAndPassword(auth, email, password)`.
+2. **ID Token & HTTP-Only Session Cookie**: Upon successful sign-in, the client fetches the Firebase ID Token (`user.getIdToken()`) and posts it to `/api/auth/login`. The server sets an HTTP-only, `SameSite=Lax`, `Secure` cookie named `__session`.
+3. **Server-Side Edge Middleware Route Protection**: Next.js Edge Middleware (`middleware.ts`) intercepts requests to `/admin`. If the `__session` cookie is missing, the server performs an instant `NextResponse.redirect` to `/login` before rendering protected HTML, preventing any flash of unauthenticated content.
+4. **Session Persistence**: Firebase Auth's `onAuthStateChanged` restores client state on page refresh; HTTP-only cookies persist across requests.
+5. **Session Destruction**: Clicking "Sign out" calls `signOut(auth)` and posts to `/api/auth/logout`, destroying the `__session` cookie on the server.
+
+---
+
+## ⚡ Installation & Setup
+
+1. **Clone Repository**:
    ```bash
-   git clone https://github.com/your-username/leaddesk-mini.git
-   cd leaddesk-mini
+   git clone https://github.com/HimanshuSingh-Raja/Lead-management-system.git
+   cd Lead-management-system
    ```
 
-2. **Install dependencies**:
+2. **Install Dependencies**:
    ```bash
    npm install
    ```
 
-3. **Configure Environment**:
+3. **Configure Environment Variables**:
    ```bash
-   cp .env.example .env.local
+   cp .env.local.example .env.local
    # Edit .env.local with your Firebase credentials
    ```
 
@@ -130,7 +197,7 @@ FIREBASE_PRIVATE_KEY="-----BEGIN PRIVATE KEY-----\n...\n-----END PRIVATE KEY----
    ```
    Open [http://localhost:3000](http://localhost:3000).
 
-5. **Verify Build & Lint**:
+5. **Verify Type-Safety & Production Build**:
    ```bash
    npx tsc --noEmit
    npm run lint
@@ -139,61 +206,63 @@ FIREBASE_PRIVATE_KEY="-----BEGIN PRIVATE KEY-----\n...\n-----END PRIVATE KEY----
 
 ---
 
-## 🚢 Deployment
+## ⚙️ Environment Variables
 
-### Vercel Deployment
+Create `.env.local` in the project root:
 
-1. Push your repository to GitHub and connect it to [Vercel](https://vercel.com).
-2. Configure all environment variables from `.env.example` in **Vercel → Project Settings → Environment Variables**.
-3. Ensure Firebase Auth authorized domains list your Vercel deployment URL (e.g. `your-app.vercel.app`).
-4. Trigger deployment.
+```env
+# Client-side Firebase Web Configuration
+NEXT_PUBLIC_FIREBASE_API_KEY=AIzaSyCRDE4cjySGlRqjN-EmhBfP1dPymtAGjqU
+NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN=kashaf-rider-vlog.firebaseapp.com
+NEXT_PUBLIC_FIREBASE_PROJECT_ID=kashaf-rider-vlog
+NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET=kashaf-rider-vlog.firebasestorage.app
+NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID=963732230758
+NEXT_PUBLIC_FIREBASE_APP_ID=1:963732230758:web:a18439ec349e530fd013a7
+
+# Server-side Firebase Admin SDK Configuration
+FIREBASE_PROJECT_ID=kashaf-rider-vlog
+FIREBASE_CLIENT_EMAIL=firebase-adminsdk-xxxxx@kashaf-rider-vlog.iam.gserviceaccount.com
+FIREBASE_PRIVATE_KEY="-----BEGIN PRIVATE KEY-----\nYourPrivateKeyHere\n-----END PRIVATE KEY-----\n"
+```
 
 ---
 
-## 🔑 Admin Credentials (Test Account)
+## 🚢 Deployment
 
-To test the live Admin Dashboard:
+### Deploy on Vercel
+1. Push repository to GitHub.
+2. Import project into [Vercel](https://vercel.com).
+3. Add all variables from `.env.local.example` under **Project Settings → Environment Variables**.
+4. Set Build Command: `npm run build`.
+5. Deploy and add live Vercel domain to **Firebase Console → Authentication → Settings → Authorized domains**.
+
+---
+
+## 🔑 Test Credentials (Admin User)
 
 - **Email**: `admin@leaddesk.com`
 - **Password**: `Admin@12345`
 
-*(Note: Create this user in your Firebase Console under Authentication → Users).*
+---
+
+## 🌐 Live URL & Repositories
+
+- **GitHub Repository**: [https://github.com/HimanshuSingh-Raja/Lead-management-system](https://github.com/HimanshuSingh-Raja/Lead-management-system)
+- **Live Deployment URL**: `https://lead-management-system.onrender.com`
 
 ---
 
-## 🌐 Live URLs
+## 📹 Loom Video Walkthrough
 
-- **Production Deployment**: `https://leaddesk-mini.vercel.app` (replace with live URL)
-- **Repository**: `https://github.com/HimanshuSingh-Raja/Lead-management-system`
-
----
-
-## 📹 Demo Video (Loom Walkthrough)
-
-- **Video Link**: `[Insert Loom Video Link Here]` *(e.g. https://www.loom.com/share/your-video-id)*
-
-**Video Walkthrough Flow (5 Minutes max)**:
-1. **Public Landing Page**: Overview of responsive Hero section, features, and footer.
-2. **Lead Form Submission**: Demonstrating client-side validation & submitting a new lead.
-3. **Firestore Verification**: Showing the lead entry saved in Cloud Firestore with `status: "New"`, `createdAt`, and `updatedAt`.
-4. **Admin Sign-In**: Firebase Authentication email/password sign-in.
-5. **Protected Admin Dashboard**: Viewing real-time leads, live counters, search by Name/Email, and status toggle (New → Contacted → Closed).
+- **Video Link**: `[Insert Loom Video Link Here]`
 
 ---
 
 ## 📸 Screenshots
 
-- **Public Landing Page**: Clean responsive hero, lead capture form, features & FAQ.
-- **Login Page**: Firebase authentication with validation & error handling.
-- **Admin Dashboard**: Real-time leads list, status toggles, lead counters, and search filtering.
-
----
-
-## 🔮 Future Improvements
-
-1. **Email Notifications**: Send instant notification emails via SendGrid / Resend when a new lead is submitted.
-2. **Lead Export**: CSV / Excel export functionality for leads in the admin dashboard.
-3. **Advanced Analytics**: Visual conversion charts and pipeline velocity analytics.
+- **Public Landing Page**: Responsive Hero section, Lead form with validation, features & footer credit.
+- **Firebase Auth Login**: Email/Password authentication with loading spinners & error notifications.
+- **Admin CRM Dashboard**: Real-time leads pipeline, Recharts analytics, multi-column search, status toggles, audit trail log, and CSV import/export.
 
 ---
 

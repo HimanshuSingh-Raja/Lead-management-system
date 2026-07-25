@@ -50,7 +50,16 @@ export default function LoginPage() {
     setBusy(true);
 
     try {
-      await signInWithEmailAndPassword(auth, cleanEmail, password);
+      const userCred = await signInWithEmailAndPassword(auth, cleanEmail, password);
+      const idToken = await userCred.user.getIdToken();
+      
+      // Set HTTP-only session cookie for server middleware route protection
+      await fetch("/api/auth/login", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ idToken }),
+      });
+
       toast.success("Successfully logged in!");
       router.replace("/admin");
     } catch (err: unknown) {
@@ -207,7 +216,7 @@ export default function LoginPage() {
               Protected with secure Firebase authentication. Contact your team administrator if you need access.
             </p>
             <p className="mt-3 text-center text-xs text-slate-500">
-              <a className="transition hover:text-slate-300" href="https://digitalheroesco.com" target="_blank" rel="noreferrer">Built for Digital Heroes Training Task</a>
+              Built for <a className="transition hover:text-slate-300 underline underline-offset-4" href="https://digitalheroesco.com" target="_blank" rel="noopener noreferrer">Digital Heroes Training Task</a>
             </p>
           </div>
         </section>
