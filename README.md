@@ -210,22 +210,18 @@ Stores in-app alerts and notifications.
 
 Create `.env.local` in the project root:
 
-```env
-# Client-side Firebase Web Configuration
-NEXT_PUBLIC_FIREBASE_API_KEY=AIzaSyCRDE4cjySGlRqjN-EmhBfP1dPymtAGjqU
-NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN=kashaf-rider-vlog.firebaseapp.com
-NEXT_PUBLIC_FIREBASE_PROJECT_ID=kashaf-rider-vlog
-NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET=kashaf-rider-vlog.firebasestorage.app
-NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID=963732230758
-NEXT_PUBLIC_FIREBASE_APP_ID=1:963732230758:web:a18439ec349e530fd013a7
+# Client
+NEXT_PUBLIC_FIREBASE_API_KEY=your_api_key
+NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN=your-project.firebaseapp.com
+NEXT_PUBLIC_FIREBASE_PROJECT_ID=your_project_id
+NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET=your_project.appspot.com
+NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID=your_sender_id
+NEXT_PUBLIC_FIREBASE_APP_ID=your_app_id
 
-# Server-side Firebase Admin SDK Configuration
-FIREBASE_PROJECT_ID=kashaf-rider-vlog
-FIREBASE_CLIENT_EMAIL=firebase-adminsdk-xxxxx@kashaf-rider-vlog.iam.gserviceaccount.com
-FIREBASE_PRIVATE_KEY="-----BEGIN PRIVATE KEY-----\nYourPrivateKeyHere\n-----END PRIVATE KEY-----\n"
-```
-
----
+# Admin
+FIREBASE_PROJECT_ID=your_project_id
+FIREBASE_CLIENT_EMAIL=your_service_account_email
+FIREBASE_PRIVATE_KEY=your_private_key
 
 ## 🚢 Deployment
 
