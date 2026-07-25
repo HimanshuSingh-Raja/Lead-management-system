@@ -1,0 +1,6 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base { html { scroll-behavior: smooth; } body { @apply bg-[#080b16] text-slate-100 antialiased; } }
+@layer components { .container-page { @apply mx-auto w-full max-w-7xl px-5 sm:px-8; } .glass { @apply border border-white/10 bg-white/[0.045] backdrop-blur-xl; } .section-title { @apply text-3xl font-semibold tracking-tight text-white sm:text-5xl; } .muted { @apply text-slate-400; } .btn-primary { @apply inline-flex items-center justify-center rounded-xl bg-gradient-to-r from-brand-500 to-violet-500 px-5 py-3 text-sm font-semibold text-white shadow-glow transition hover:scale-[1.02] hover:shadow-[0_20px_80px_rgba(109,93,252,.38)]; } .btn-secondary { @apply inline-flex items-center justify-center rounded-xl border border-white/15 bg-white/5 px-5 py-3 text-sm font-semibold text-white transition hover:bg-white/10; } }
