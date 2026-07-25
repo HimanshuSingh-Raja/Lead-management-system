@@ -202,12 +202,23 @@ export default function LoginPage() {
                   </button>
                 </span>
               </label>
+              {/* reCAPTCHA Security Badge */}
+              <div className="flex items-center justify-between gap-2 rounded-xl border border-white/10 bg-white/[0.03] p-3 text-xs text-slate-400">
+                <div className="flex items-center gap-2">
+                  <span className="grid h-4 w-4 place-items-center rounded bg-emerald-500/20 text-emerald-400">✓</span>
+                  <span>Protected by Google reCAPTCHA</span>
+                </div>
+                <span className="text-[10px] text-slate-500 font-mono">v2 / v3 Enterprise</span>
+              </div>
+
+              <div id="recaptcha-container" />
+
               <button
                 type="submit"
                 disabled={busy}
-                className="btn-primary w-full py-3.5 disabled:cursor-not-allowed disabled:opacity-70"
+                className="btn-primary w-full py-3.5 disabled:cursor-not-allowed disabled:opacity-70 flex items-center justify-center gap-2"
               >
-                {busy ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : null}
+                {busy ? <Loader2 className="h-4 w-4 animate-spin" /> : null}
                 {busy ? "Signing you in…" : "Sign in securely"}
               </button>
             </form>
