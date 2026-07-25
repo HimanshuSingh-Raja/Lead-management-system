@@ -250,7 +250,7 @@ FIREBASE_PRIVATE_KEY=your_private_key
 
 ## 📹 Loom Video Walkthrough
 
-- **Video Link**: `[Insert Loom Video Link Here]`
+- **Video Link**: `[https://drive.google.com/drive/folders/1eY7NKUNk8njX11jUGlSCpKQupH-ib4GU]`
 
 ---
 
