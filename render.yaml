@@ -1,0 +1,21 @@
+services:
+  - type: web
+    name: lead-management-system
+    env: node
+    buildCommand: npm run build
+    startCommand: npm run start
+    envVars:
+      - key: NODE_VERSION
+        value: 20.0.0
+      - key: NEXT_PUBLIC_FIREBASE_API_KEY
+        value: AIzaSyCRDE4cjySGlRqjN-EmhBfP1dPymtAGjqU
+      - key: NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN
+        value: kashaf-rider-vlog.firebaseapp.com
+      - key: NEXT_PUBLIC_FIREBASE_PROJECT_ID
+        value: kashaf-rider-vlog
+      - key: NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET
+        value: kashaf-rider-vlog.firebasestorage.app
+      - key: NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID
+        value: "963732230758"
+      - key: NEXT_PUBLIC_FIREBASE_APP_ID
+        value: 1:963732230758:web:a18439ec349e530fd013a7
