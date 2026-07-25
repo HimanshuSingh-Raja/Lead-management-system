@@ -164,7 +164,7 @@ To test the live Admin Dashboard:
 ## 🌐 Live URLs
 
 - **Production Deployment**: `https://leaddesk-mini.vercel.app` (replace with live URL)
-- **Repository**: `https://github.com/your-username/leaddesk-mini`
+- **Repository**: `https://github.com/HimanshuSingh-Raja/Lead-management-system`
 
 ---
 
